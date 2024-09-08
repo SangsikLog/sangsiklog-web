@@ -1,5 +1,5 @@
 const AuthRoutes = {
-  path: '/auth',
+  path: '/',
   component: () => import('@/layouts/blank/BlankLayout.vue'),
   meta: {
     requiresAuth: false
@@ -7,7 +7,7 @@ const AuthRoutes = {
   children: [
     {
       name: 'Login',
-      path: '/auth/login',
+      path: 'login',
       component: () => import('@/views/auth/LoginPage.vue')
     }
   ]
