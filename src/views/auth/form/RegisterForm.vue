@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import {userApi} from "@/api/UserApi";
+import {router} from "@/router";
+
 const show1 = ref(false);
 const password = ref('');
 const email = ref('');
@@ -24,17 +27,24 @@ const emailRules = ref([
   (v: string) => /.+@.+\..+/.test(v) || '이메일 형식이 올바르지 않습니다.']
 );
 
-function validate() {
-  Regform.value.validate();
+async function signUp() {
+  const validateResult = await Regform.value.validate()
+  if (validateResult.valid) {
+    userApi.signUp(nickname.value, email.value, password.value)
+        .then(data => {
+          alert('회원가입이 완료되었습니다!');
+          router.push('/auth/login');
+        })
+        .catch(error => {
+          alert(error.details.message);
+        })
+  }
 }
 
 // 이메일 인증 버튼 클릭 시
 async function requestEmailVerification() {
   const validateResult = await Regform.value.validate()
 
-  console.log(validateResult)
-
-  // 인증번호 필드와 인증 버튼을 표시
   if (validateResult.valid) {
     showVerificationFields.value = true;
     sendEmailVerifyMail.value = true;
@@ -108,7 +118,7 @@ function verifyEmailCode() {
         @click:append="show1 = !show1"
         class="pwdInput"
     ></v-text-field>
-    <v-btn v-if="emailVerified" color="secondary" block class="mt-2" variant="flat" size="large" @click="validate()">회원가입</v-btn>
+    <v-btn v-if="emailVerified" color="secondary" block class="mt-2" variant="flat" size="large" @click="signUp()">회원가입</v-btn>
   </v-form>
   <div class="mt-5 text-right">
     <v-divider />
