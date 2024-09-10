@@ -18,7 +18,7 @@ const emailRules = ref([
 ]);
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-function validate(values: any, { setErrors }: any) {
+function login(values: any, { setErrors }: any) {
   const authStore = useAuthStore();
   return authStore.login(email.value, password.value)
       .catch((error) => setErrors({ apiError: error  }));
@@ -26,11 +26,11 @@ function validate(values: any, { setErrors }: any) {
 </script>
 
 <template>
-  <Form @submit="validate" class="mt-7 loginForm" v-slot="{errors, isSubmitting}">
+  <Form @submit="login" class="mt-7 loginForm" v-slot="{errors, isSubmitting}">
     <v-text-field
         v-model="email"
         :rules="emailRules"
-        label="Email Address / Username"
+        label="이메일"
         class="mt-4 mb-8"
         required
         density="comfortable"
@@ -41,7 +41,7 @@ function validate(values: any, { setErrors }: any) {
     <v-text-field
         v-model="password"
         :rules="passwordRules"
-        label="Password"
+        label="비밀번호"
         required
         density="comfortable"
         variant="outlined"
