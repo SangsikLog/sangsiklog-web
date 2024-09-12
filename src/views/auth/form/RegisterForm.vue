@@ -2,6 +2,8 @@
 import { ref } from 'vue';
 import {userApi} from "@/api/UserApi";
 import {router} from "@/router";
+import {useAuthStore} from "@/stores/auth";
+import type {ServiceError} from "@/api/ServiceError";
 
 const show1 = ref(false);
 const password = ref('');
@@ -9,13 +11,11 @@ const email = ref('');
 const Regform = ref();
 const nickname = ref('');
 
-// 이메일 인증 관련 상태
-const emailVerified = ref(false); // 이메일 인증이 완료되었는지 여부
-const sendEmailVerifyMail = ref(false); // 이메일 인증 메일을 보냈는지 여부
-const emailVerificationCode = ref(''); // 입력한 인증번호
-const showVerificationFields = ref(false); // 인증번호 입력 필드와 버튼을 보여줄지 여부
+const emailVerified = ref(false);
+const sendEmailVerifyMail = ref(false);
+const emailVerificationCode = ref('');
+const showVerificationFields = ref(false);
 
-// 유효성 검사
 const nickNameRules = ref([
   (v: string) => !!v || '닉네임을 입력해주세요.'
 ]);
@@ -27,40 +27,52 @@ const emailRules = ref([
   (v: string) => /.+@.+\..+/.test(v) || '이메일 형식이 올바르지 않습니다.']
 );
 
+const { sendVerificationMail, verifyEmailToken } = useAuthStore();
+
 async function signUp() {
   const validateResult = await Regform.value.validate()
   if (validateResult.valid) {
     userApi.signUp(nickname.value, email.value, password.value)
-        .then(data => {
+        .then(() => {
           alert('회원가입이 완료되었습니다!');
           router.push('/auth/login');
         })
-        .catch(error => {
-          alert(error.details.message);
+        .catch((error) => {
+          alert(error.message);
         })
   }
 }
 
-// 이메일 인증 버튼 클릭 시
 async function requestEmailVerification() {
   const validateResult = await Regform.value.validate()
 
   if (validateResult.valid) {
     showVerificationFields.value = true;
     sendEmailVerifyMail.value = true;
+    sendVerificationMail(email.value)
+        .then((response) => {
+          if (response === "ok") {
+            alert('인증번호가 발송되었습니다.');
+          }
+        })
+        .catch((error: ServiceError) => {
+          alert(error.message);
+        })
   }
 }
 
-// 인증번호 확인 버튼 클릭 시
-function verifyEmailCode() {
-  // 인증번호가 맞는지 확인 (여기서는 임시로 '123456'을 맞는 인증번호로 처리)
-  if (emailVerificationCode.value === '123456') {
-    alert('인증이 완료되었습니다.');
-    emailVerified.value = true; // 인증 성공 처리
-    showVerificationFields.value = false; // 인증번호 입력 필드 숨김
-  } else {
-    alert('인증번호가 틀렸습니다.');
-  }
+async function verifyEmailCode() {
+  verifyEmailToken(email.value, emailVerificationCode.value)
+      .then((response) => {
+        if (response === "ok") {
+            alert('인증이 완료되었습니다.');
+            emailVerified.value = true;
+            showVerificationFields.value = false;
+        }
+      })
+      .catch((error: ServiceError) => {
+        alert(error.message);
+      });
 }
 </script>
 
