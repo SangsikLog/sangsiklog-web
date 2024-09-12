@@ -1,7 +1,7 @@
 import { useAuthStore } from '@/stores/auth';
 import apolloClient from "@/api/ApolloClient";
 import { ApolloError } from "@apollo/client/core";
-import {GraphqlServiceError} from "@/api/GraphqlServiceError";
+import { ServiceError } from "@/api/ServiceError";
 
 export const gqlFetchWrapper = {
   query: query(),
@@ -23,9 +23,10 @@ function query() {
       });
     } catch (error) {
       if (error instanceof ApolloError) {
-        throw new GraphqlServiceError("'GraphQL Service Error", JSON.parse(error.message))
+        const json = JSON.parse(error.message);
+        throw new ServiceError(json.code, json.message, json.details);
       } else {
-        throw new GraphqlServiceError(error.message)
+        throw new ServiceError(error.message)
       }
     }
   };
@@ -46,9 +47,10 @@ function mutation() {
       });
     } catch (error) {
       if (error instanceof ApolloError) {
-        throw new GraphqlServiceError("'GraphQL Service Error", JSON.parse(error.message))
+        const json = JSON.parse(error.message);
+        throw new ServiceError(json.code, json.message, json.details)
       } else {
-        throw new GraphqlServiceError(error.message)
+        throw new ServiceError(error.message)
       }
     }
   };

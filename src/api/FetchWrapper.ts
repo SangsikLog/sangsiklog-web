@@ -1,4 +1,5 @@
 import { useAuthStore } from '@/stores/auth';
+import { ServiceError } from "@/api/ServiceError";
 
 export const fetchWrapper = {
   get: request('GET'),
@@ -49,8 +50,7 @@ function handleResponse(response: Response) {
         logout();
       }
 
-      const error: string = (data && data.message) || response.statusText;
-      return Promise.reject(error);
+      return Promise.reject(new ServiceError(data.code, data.message, data.details))
     }
 
     return data.result;

@@ -3,6 +3,7 @@
 import { Form } from "vee-validate";
 import { useAuthStore } from "@/stores/auth";
 import { ref } from "vue";
+import type {ServiceError} from "@/api/ServiceError";
 
 const valid = ref(false);
 const show1 = ref(false);
@@ -21,7 +22,7 @@ const emailRules = ref([
 function login(values: any, { setErrors }: any) {
   const authStore = useAuthStore();
   return authStore.login(email.value, password.value)
-      .catch((error) => setErrors({ apiError: error  }));
+      .catch((error: ServiceError) => setErrors({ apiError: error.message }));
 }
 </script>
 
