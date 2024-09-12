@@ -134,7 +134,7 @@ async function verifyEmailCode() {
   </v-form>
   <div class="mt-5 text-right">
     <v-divider />
-    <v-btn variant="plain" to="/login" class="mt-2 text-capitalize mr-n2">이미 계정이 있으신가요?</v-btn>
+    <v-btn variant="plain" to="/auth/login" class="mt-2 text-capitalize mr-n2">이미 계정이 있으신가요?</v-btn>
   </div>
 </template>
 
