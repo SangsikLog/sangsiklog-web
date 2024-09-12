@@ -3,7 +3,7 @@
 import { Form } from "vee-validate";
 import { useAuthStore } from "@/stores/auth";
 import { ref } from "vue";
-import type {ServiceError} from "@/api/ServiceError";
+import { ServiceError } from "@/api/ServiceError";
 
 const valid = ref(false);
 const show1 = ref(false);
@@ -18,16 +18,17 @@ const emailRules = ref([
   (v: string) => /.+@.+\..+/.test(v) || '이메일 형식이 올바르지 않습니다.'
 ]);
 
+const { login } = useAuthStore();
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
-function login(values: any, { setErrors }: any) {
-  const authStore = useAuthStore();
-  return authStore.login(email.value, password.value)
+function requestLogin(values: any, { setErrors }: any) {
+  login(email.value, password.value)
       .catch((error: ServiceError) => setErrors({ apiError: error.message }));
 }
 </script>
 
 <template>
-  <Form @submit="login" class="mt-7 loginForm" v-slot="{errors, isSubmitting}">
+  <Form @submit="requestLogin" class="mt-7 loginForm" v-slot="{errors, isSubmitting}">
     <v-text-field
         v-model="email"
         :rules="emailRules"

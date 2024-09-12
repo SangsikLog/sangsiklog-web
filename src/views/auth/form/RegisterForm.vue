@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import {userApi} from "@/api/UserApi";
-import {router} from "@/router";
-import {useAuthStore} from "@/stores/auth";
-import type {ServiceError} from "@/api/ServiceError";
+import { router } from "@/router";
+import { useAuthStore } from "@/stores/auth";
+import { ServiceError } from "@/api/ServiceError";
+import { useUserStore } from "@/stores/user";
 
 const show1 = ref(false);
 const password = ref('');
@@ -12,8 +12,8 @@ const Regform = ref();
 const nickname = ref('');
 
 const emailVerified = ref(false);
-const sendEmailVerifyMail = ref(false);
-const emailVerificationCode = ref('');
+const isVerifyMailSend = ref(false);
+const emailVerificationToken = ref('');
 const showVerificationFields = ref(false);
 
 const nickNameRules = ref([
@@ -28,11 +28,12 @@ const emailRules = ref([
 );
 
 const { sendVerificationMail, verifyEmailToken } = useAuthStore();
+const { signUp } = useUserStore();
 
-async function signUp() {
+async function requestSignUp() {
   const validateResult = await Regform.value.validate()
   if (validateResult.valid) {
-    userApi.signUp(nickname.value, email.value, password.value)
+    signUp(nickname.value, email.value, password.value)
         .then(() => {
           alert('회원가입이 완료되었습니다!');
           router.push('/auth/login');
@@ -43,12 +44,12 @@ async function signUp() {
   }
 }
 
-async function requestEmailVerification() {
+async function requestSendVerificationMail() {
   const validateResult = await Regform.value.validate()
-
   if (validateResult.valid) {
     showVerificationFields.value = true;
-    sendEmailVerifyMail.value = true;
+    isVerifyMailSend.value = true;
+
     sendVerificationMail(email.value)
         .then((response) => {
           if (response === "ok") {
@@ -61,8 +62,8 @@ async function requestEmailVerification() {
   }
 }
 
-async function verifyEmailCode() {
-  verifyEmailToken(email.value, emailVerificationCode.value)
+async function requestVerifyEmailToken() {
+  verifyEmailToken(email.value, emailVerificationToken.value)
       .then((response) => {
         if (response === "ok") {
             alert('인증이 완료되었습니다.');
@@ -101,10 +102,10 @@ async function verifyEmailCode() {
         variant="outlined"
         color="primary"
     ></v-text-field>
-    <v-btn v-if="!emailVerified && !sendEmailVerifyMail" color="secondary" block class="mt-2" variant="flat" size="large" @click="requestEmailVerification">이메일 인증</v-btn>
+    <v-btn v-if="!emailVerified && !isVerifyMailSend" color="secondary" block class="mt-2" variant="flat" size="large" @click="requestSendVerificationMail">이메일 인증</v-btn>
     <div v-if="showVerificationFields" class="mt-4">
       <v-text-field
-          v-model="emailVerificationCode"
+          v-model="emailVerificationToken"
           label="인증번호"
           required
           density="comfortable"
@@ -112,7 +113,7 @@ async function verifyEmailCode() {
           variant="outlined"
           color="primary"
       ></v-text-field>
-      <v-btn color="secondary" block class="mt-2" variant="flat" size="large" @click="verifyEmailCode">인증번호 확인</v-btn>
+      <v-btn color="secondary" block class="mt-2" variant="flat" size="large" @click="requestVerifyEmailToken">인증번호 확인</v-btn>
     </div>
 
     <v-text-field
@@ -130,7 +131,7 @@ async function verifyEmailCode() {
         @click:append="show1 = !show1"
         class="pwdInput"
     ></v-text-field>
-    <v-btn v-if="emailVerified" color="secondary" block class="mt-2" variant="flat" size="large" @click="signUp()">회원가입</v-btn>
+    <v-btn v-if="emailVerified" color="secondary" block class="mt-2" variant="flat" size="large" @click="requestSignUp()">회원가입</v-btn>
   </v-form>
   <div class="mt-5 text-right">
     <v-divider />
