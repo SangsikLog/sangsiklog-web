@@ -1,6 +1,6 @@
 import { authApi } from "@/api/AuthApi";
 import { defineStore } from "pinia";
-import {router} from "@/router";
+import { router } from "@/router";
 
 export const useAuthStore = defineStore({
     id: 'auth',
@@ -14,13 +14,21 @@ export const useAuthStore = defineStore({
 
             this.authToken = response;
             localStorage.setItem('authToken', JSON.stringify(response));
-            router.push(this.returnUrl);
+            await router.push(this.returnUrl);
         },
 
-        logout() {
+        async logout() {
             this.authToken = null;
             localStorage.removeItem('authToken');
-            router.push('/auth/login');
+            await router.push('/auth/login');
+        },
+
+        async sendVerificationMail(email: string) {
+            return authApi.sendVerificationMail(email);
+        },
+
+        async verifyEmailToken(email: string, token: string) {
+            return authApi.verifyEmailToken(email, token);
         }
     }
 });
