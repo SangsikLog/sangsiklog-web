@@ -38,7 +38,7 @@ const revenues = ref([
     <v-card variant="outlined">
       <v-card-text>
         <div class="d-flex align-center">
-          <h4 class="text-h4 mt-1">여러분의 상식을 알려주세요!</h4>
+          <h3 class="text-h3 mt-1">인기 상식 TOP10</h3>
         </div>
 
         <div class="mt-4">
@@ -74,7 +74,7 @@ const revenues = ref([
 
           <div class="text-center mt-3">
             <v-btn color="primary" variant="text"
-              >View All
+              >전체 상식 보러가기
               <template v-slot:append>
                 <ChevronRightIcon stroke-width="1.5" width="20" />
               </template>
