@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Logo from '@/layouts/full/logo/Logo.vue'
+import Logo from '@/layouts/full/logo/AppLogo.vue'
 import RegisterForm from "@/views/auth/form/RegisterForm.vue";
 </script>
 

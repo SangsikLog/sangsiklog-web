@@ -2,6 +2,6 @@ interface AuthToken {
     token: string;
 }
 
-export {
+export type {
     AuthToken
 }
