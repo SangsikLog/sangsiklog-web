@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import LoginForm from "@/views/auth/form/LoginForm.vue";
-import Logo from "@/layouts/full/logo/Logo.vue";
+import Logo from "@/layouts/full/logo/AppLogo.vue";
 </script>
 
 <template>

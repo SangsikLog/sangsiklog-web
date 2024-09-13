@@ -6,11 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
-    "build-stage": "vue-tsc --noEmit && vite build --base=/vue/free/stage/",
-    "build-prod": "vue-tsc --noEmit && vite build --base=/vue/free/",
+    "build-real": "vue-tsc --noEmit && vite build --mode real",
     "preview": "vite preview --port 5050",
     "typecheck": "vue-tsc --noEmit",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-pattern .gitignore"
+    "lint": "eslint . --fix --ignore-pattern .gitignore --ignore-pattern dist/"
   },
   "dependencies": {
     "@apollo/client": "^3.11.8",

@@ -10,10 +10,10 @@ export const gqlFetchWrapper = {
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 function query() {
-  return async (mutation: any, variables?: object) => {
+  return async (query: any, variables?: object) => {
     try {
       return await apolloClient.query({
-        mutation: mutation,
+        query: query,
         variables: variables,
         context: {
           headers: {
@@ -26,7 +26,7 @@ function query() {
         const json = JSON.parse(error.message);
         throw new ServiceError(json.code, json.message, json.details);
       } else {
-        throw new ServiceError(error.message)
+        throw error
       }
     }
   };
@@ -48,9 +48,9 @@ function mutation() {
     } catch (error) {
       if (error instanceof ApolloError) {
         const json = JSON.parse(error.message);
-        throw new ServiceError(json.code, json.message, json.details)
+        throw new ServiceError(json.code, json.message, json.details);
       } else {
-        throw new ServiceError(error.message)
+        throw error
       }
     }
   };
