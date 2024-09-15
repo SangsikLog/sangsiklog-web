@@ -1,40 +1,72 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import {ChevronDownIcon, ChevronUpIcon} from "vue-tabler-icons";
+import { AwardFilledIcon } from "vue-tabler-icons";
 
 const revenues = ref([
   {
     name: 'Bajaj Finery',
-    price: 145.58,
+    price: 145,
     profit: 10
   },
   {
     name: 'TTML',
-    price: 6.368,
+    price: 142,
     profit: 10
   },
   {
     name: 'Reliance',
-    price: 458.63,
+    price: 100,
     profit: 10
   },
   {
     name: 'TTML',
-    price: 5.631,
+    price: 98,
     profit: 10
   },
   {
     name: 'Stolon',
-    price: 6.368,
+    price: 88,
+    profit: 10
+  },
+  {
+    name: 'Stolon',
+    price: 88,
+    profit: 10
+  },
+  {
+    name: 'Stolon',
+    price: 88,
+    profit: 10
+  },
+  {
+    name: 'Stolon',
+    price: 88,
+    profit: 10
+  },
+  {
+    name: 'Stolon',
+    price: 88,
+    profit: 10
+  },
+  {
+    name: 'Stolon',
+    price: 88,
     profit: 10
   }
 ]);
 
-const select = ref({ state: 'Today', abbr: 'FL' });
+const select = ref({ state: '역사', abbr: 'HISTORY' });
 const items = [
-  { state: 'Today', abbr: 'FL' },
-  { state: 'This Month', abbr: 'GA' },
-  { state: 'This Year', abbr: 'NE' }
+  { state: '역사', abbr: 'HISTORY' },
+  { state: '지리', abbr: 'GEOGRAPHY' },
+  { state: '과학', abbr: 'SCIENCE' },
+  { state: '기술', abbr: 'TECHNOLOGY' },
+  { state: '문화', abbr: 'CULTURE' },
+  { state: '사회', abbr: 'SOCIETY' },
+  { state: '스포츠', abbr: 'SPORTS' },
+  { state: '건강', abbr: 'HEALTH' },
+  { state: '엔터테인먼트', abbr: 'ENTERTAINMENT' },
+  { state: '기타', abbr: 'ETC' }
 ];
 
 // chart 1
@@ -47,7 +79,7 @@ const chartOptions1 = computed(() => {
       foreColor: '#a1aab2',
       stacked: true
     },
-    colors: ['#eef2f6', '#1e88e5', '#5e35b1', '#ede7f6'],
+    colors: ['#1e88e5'],
     responsive: [
       {
         breakpoint: 480,
@@ -68,7 +100,7 @@ const chartOptions1 = computed(() => {
     },
     xaxis: {
       type: 'category',
-      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+      categories: ['역사', '지리', '과학', '기술', '문화', '사회', '스포츠', '건강', '엔터테인먼트', '기타']
     },
     legend: {
       show: true,
@@ -107,20 +139,8 @@ const chartOptions1 = computed(() => {
 const lineChart1 = {
   series: [
     {
-      name: 'Investment',
-      data: [35, 125, 35, 35, 35, 80, 35, 20, 35, 45, 15, 75]
-    },
-    {
-      name: 'Loss',
-      data: [35, 15, 15, 35, 65, 40, 80, 25, 15, 85, 25, 75]
-    },
-    {
-      name: 'Profit',
-      data: [35, 145, 35, 35, 20, 105, 100, 10, 65, 45, 30, 10]
-    },
-    {
-      name: 'Maintenance',
-      data: [0, 0, 75, 0, 0, 115, 0, 0, 0, 0, 150, 0]
+      name: '개수',
+      data: [35, 125, 35, 35, 35, 80, 35, 20, 35, 45]
     }
   ]
 };
@@ -132,7 +152,7 @@ const lineChart1 = {
       <v-card-text>
         <v-row>
           <v-col cols="12" sm="9">
-            <h3 class="text-h3 mt-1">카테고리별 상식 TOP10</h3>
+            <h3 class="text-h3 mt-1">카테고리별 인기 상식</h3>
           </v-col>
           <v-col cols="12" sm="3">
             <v-select
@@ -157,27 +177,16 @@ const lineChart1 = {
             <v-list lines="two" class="py-0">
               <v-list-item v-for="(revenue, i) in revenues" :key="i" :value="revenue" color="secondary" rounded="sm">
                 <template v-slot:append>
-                  <div
-                      class="bg-lightsuccess rounded-sm d-flex align-center justify-center ml-3"
-                      style="width: 20px; height: 20px"
-                      v-if="revenue.price > 145"
-                  >
-                    <ChevronUpIcon stroke-width="1.5" width="20" class="text-success" />
-                  </div>
-                  <div class="bg-lighterror rounded-sm d-flex align-center justify-center ml-3" style="width: 20px; height: 20px" v-else>
-                    <ChevronDownIcon stroke-width="1.5" width="20" class="text-error" />
-                  </div>
+                  <AwardFilledIcon class="text-gold" style="vertical-align: sub"/>
                 </template>
                 <div class="d-inline-flex align-center justify-space-between w-100">
                   <div>
                     <h6 class="text-subtitle-1 text-medium-emphasis font-weight-bold">
                       {{ revenue.name }}
                     </h6>
-                    <span v-if="revenue.price > 145" class="text-success text-subtitle-2">{{ revenue.profit }}% Profit</span>
-                    <span v-else class="text-error text-subtitle-2">{{ revenue.profit }}% Profit</span>
                   </div>
 
-                  <div class="ml-auto text-subtitle-1 text-medium-emphasis font-weight-bold">${{ revenue.price }}</div>
+                  <div class="ml-auto text-subtitle-1 text-medium-emphasis font-weight-bold">{{ revenue.price }}</div>
                 </div>
               </v-list-item>
             </v-list>

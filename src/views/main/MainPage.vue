@@ -1,25 +1,24 @@
 <script setup lang="ts">
 
-import PopularStocks from "@/views/main/DailyContents.vue";
-import TotalEarning from "@/views/main/TotalEarning.vue";
-import TotalOrder from "@/views/main/TotalOrder.vue";
-import TotalIncome from "@/views/main/TotalIncome.vue";
-import TotalGrowth from "@/views/main/TotalGrowth.vue";
+import PopularKnowledge from "@/views/main/components/PopularKnowledge.vue";
+import TotalKnowledgeCount from "@/views/main/components/TotalKnowledgeCount.vue";
+import DailyKnowledge from "@/views/main/components/DailyKnowledge.vue";
+import CategoryKnowledge from "@/views/main/components/CategoryKnowledge.vue";
 </script>
 
 <template>
   <v-row>
     <v-col cols="12" md="6">
-      <TotalEarning />
+      <TotalKnowledgeCount />
     </v-col>
     <v-col cols="12" md="6">
-      <TotalIncome />
+      <DailyKnowledge />
     </v-col>
     <v-col cols="12" lg="12">
-      <PopularStocks />
+      <PopularKnowledge />
     </v-col>
     <v-col cols="12" lg="12">
-      <TotalGrowth />
+      <CategoryKnowledge />
     </v-col>
   </v-row>
 </template>
