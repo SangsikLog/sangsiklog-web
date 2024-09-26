@@ -4,12 +4,17 @@ import { useContentStore } from "@/stores/content";
 import { onMounted, ref } from "vue";
 import KnowledgeDetailModal from "@/views/main/modal/KnowledgeDetailModal.vue";
 import RegisterKnowledgeModal from "@/views/main/modal/RegisterKnowledgeModal.vue";
+import { useUserStore } from "@/stores/user";
+import LoginModal from "@/views/main/modal/LoginModal.vue";
 
 const { getDailyKnowledge } = useContentStore();
 const dailyKnowledgeTitle = ref("");
 const dailyKnowledgeDescription = ref("");
 const showKnowledgeDetailModal = ref(false);
 const showRegisterKnowledgeModal = ref(false);
+const showLoginModal = ref(false);
+
+const userStore = useUserStore()
 
 async function requestGetDailyKnowledge() {
   getDailyKnowledge()
@@ -28,7 +33,11 @@ const openKnowledgeDetailModal = () => {
 };
 
 const openRegisterKnowledgeModal = () => {
-  showRegisterKnowledgeModal.value = true;
+  if (userStore.userInfo) {
+    showRegisterKnowledgeModal.value = true;
+  } else {
+    showLoginModal.value = true;
+  }
 };
 
 onMounted(() => {
@@ -44,6 +53,7 @@ onMounted(() => {
         <v-btn icon rounded="sm" color="darkprimary" variant="flat" @click.prevent="openRegisterKnowledgeModal">
           <SquarePlusIcon width="25" />
         </v-btn>
+        <span class="text-subtitle-1 text-medium-emphasis text-white mt-3 ml-3" style="z-index:99">👈 상식 추가</span>
       </div>
       <h2 class="text-h1 font-weight-medium">
         {{ dailyKnowledgeTitle }}
@@ -65,5 +75,10 @@ onMounted(() => {
   <RegisterKnowledgeModal
       :showRegisterKnowledgeModal="showRegisterKnowledgeModal"
       @update:showRegisterKnowledgeModal="showRegisterKnowledgeModal = $event"
+  />
+
+  <LoginModal
+      :showLoginModal="showLoginModal"
+      @update:showLoginModal="showLoginModal = $event"
   />
 </template>

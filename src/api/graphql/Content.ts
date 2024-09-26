@@ -53,7 +53,7 @@ const GET_CATEGORY_LIST_QUERY = gql`
 `;
 
 const GET_CATEGORY_KNOWLEDGE_STATISTIC_QUERY = gql`
-    query getCategoryKnowledgeStatistic {
+    query GetCategoryKnowledgeStatistic {
         getCategoryKnowledgeStatistic {
             statistic {
                 categoryId
@@ -63,10 +63,19 @@ const GET_CATEGORY_KNOWLEDGE_STATISTIC_QUERY = gql`
     }
 `;
 
+const REGISTER_KNOWLEDGE_MUTATION = gql`
+    mutation RegisterKnowledge($userId: Long!, $title: String!, $description: String!, $categoryId: Long!) {
+        registerKnowledge(userId: $userId, title: $title, description: $description, categoryId: $categoryId) {
+            id
+        }
+    }
+`;
+
 export {
     GET_TOTAL_KNOWLEDGE_COUNT_QUERY,
     GET_DAILY_KNOWLEDGE_QUERY,
     GET_POPULAR_KNOWLEDGE_LIST_QUERY,
     GET_CATEGORY_LIST_QUERY,
-    GET_CATEGORY_KNOWLEDGE_STATISTIC_QUERY
+    GET_CATEGORY_KNOWLEDGE_STATISTIC_QUERY,
+    REGISTER_KNOWLEDGE_MUTATION
 }
