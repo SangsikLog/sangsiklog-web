@@ -2,8 +2,12 @@
 import { onMounted, ref } from 'vue';
 import { AwardFilledIcon } from 'vue-tabler-icons';
 import { useContentStore } from "@/stores/content";
+import KnowledgeDetailModal from "@/views/main/modal/KnowledgeDetailModal.vue";
 
 const popularKnowledgeList = ref([]);
+const showKnowledgeDetailModal = ref(false);
+const selectedKnowledgeTitle = ref("");
+const selectedKnowledgeDescription = ref("");
 
 const { getPopularKnowledgeList } = useContentStore();
 
@@ -17,6 +21,12 @@ async function requestGetPopularKnowledgeList() {
         console.log(error);
       })
 }
+
+const openKnowledgeDetailModal = (popularKnowledge) => {
+  selectedKnowledgeTitle.value = popularKnowledge.title;
+  selectedKnowledgeDescription.value = popularKnowledge.description;
+  showKnowledgeDetailModal.value = true;
+};
 
 onMounted(() => {
   requestGetPopularKnowledgeList();
@@ -36,7 +46,7 @@ onMounted(() => {
         <div class="mt-4">
           <perfect-scrollbar v-bind:style="{ height: '270px' }">
             <v-list lines="two" class="py-0">
-              <v-list-item v-for="(popularKnowledge, i) in popularKnowledgeList" :key="i" :value="popularKnowledge" color="secondary" rounded="sm">
+              <v-list-item v-for="(popularKnowledge, i) in popularKnowledgeList" :key="i" :value="popularKnowledge" color="secondary" rounded="sm" @click="openKnowledgeDetailModal(popularKnowledge)">
                 <template v-slot:append>
                   <AwardFilledIcon class="text-gold" style="vertical-align: sub"/>
                 </template>
@@ -65,4 +75,11 @@ onMounted(() => {
       </v-card-text>
     </v-card>
   </v-card>
+
+  <KnowledgeDetailModal
+      :showKnowledgeDetailModal="showKnowledgeDetailModal"
+      :title="selectedKnowledgeTitle"
+      :description="selectedKnowledgeDescription"
+      @update:showKnowledgeDetailModal="showKnowledgeDetailModal = $event"
+  />
 </template>
