@@ -1,19 +1,79 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import {onMounted, ref} from 'vue';
 import { useCustomizerStore } from '../../../stores/customizer';
 // Icon Imports
-import { BellIcon, SettingsIcon, SearchIcon, Menu2Icon } from 'vue-tabler-icons';
+import { BellIcon, SearchIcon, Menu2Icon } from 'vue-tabler-icons';
 
 // dropdown imports
 import NotificationDD from './NotificationDD.vue';
 import ProfileDD from './ProfileDD.vue';
 import Searchbar from './SearchBarPanel.vue';
+import { useAuthStore } from "@/stores/auth";
+import { useUserStore } from "@/stores/user";
 
 const customizer = useCustomizerStore();
 const showSearch = ref(false);
 function searchbox() {
   showSearch.value = !showSearch.value;
 }
+
+const isLogin = ref(false);
+const nickName = ref("");
+const email = ref("");
+
+const { authToken, verifyAuthToken, validateAuthToken } = useAuthStore();
+const { getUserInfo, initUserInfo } = useUserStore();
+const userStore = useUserStore();
+
+async function requestVerifyAuthToken() {
+  verifyAuthToken(authToken.token)
+      .then((response) => {
+        if (response.isValid) {
+          getUserId();
+        } else {
+          initUserInfo(null);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+}
+
+async function getUserId() {
+  validateAuthToken(authToken.token)
+      .then((validateResponse) => {
+        requestGetUserInfo(validateResponse.id);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+}
+
+async function requestGetUserInfo(userId) {
+  const setUserInfo = (userInfo) => {
+    isLogin.value = true;
+    nickName.value = userInfo.nickname;
+    email.value = userInfo.email;
+  };
+
+  if (userStore.userInfo) {
+    setUserInfo(userStore.userInfo);
+    return;
+  }
+
+  getUserInfo(userId)
+      .then((response) => {
+        initUserInfo(response.data.getUser);
+        setUserInfo(userStore.userInfo);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+}
+
+onMounted(() => {
+  requestVerifyAuthToken();
+});
 </script>
 
 <template>
@@ -93,13 +153,17 @@ function searchbox() {
       <template v-slot:activator="{ props }">
         <v-btn class="profileBtn text-primary" color="lightprimary" variant="flat" rounded="pill" v-bind="props">
           <v-avatar size="30" class="mr-2 py-2">
-            <img src="@/assets/images/profile/user-round.svg" alt="Julia" />
+            <img v-if="isLogin" src="@/assets/images/profile/user-round.svg" alt=""/>
+            <img v-else src="@/assets/images/profile/ic_user.svg" alt=""/>
           </v-avatar>
-          <SettingsIcon stroke-width="1.5" />
         </v-btn>
       </template>
       <v-sheet rounded="md" width="330" elevation="12">
-        <ProfileDD />
+        <ProfileDD
+            :is-login="isLogin"
+            :nickname="nickName"
+            :email="email"
+        />
       </v-sheet>
     </v-menu>
   </v-app-bar>

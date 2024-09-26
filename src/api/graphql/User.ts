@@ -8,6 +8,17 @@ const CREATE_USER_MUTATION = gql`
     }
 `;
 
+const GET_USER_INFO_QUERY = gql`
+    query GetUserInfo($userId: Long!) {
+        getUser(userId: $userId) {
+            id,
+            nickname,
+            email
+        }
+    }
+`;
+
 export {
-    CREATE_USER_MUTATION
+    CREATE_USER_MUTATION,
+    GET_USER_INFO_QUERY
 }

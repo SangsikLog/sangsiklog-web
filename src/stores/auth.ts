@@ -31,6 +31,14 @@ export const useAuthStore = defineStore({
 
         async verifyEmailToken(email: string, token: string) {
             return authApi.verifyEmailToken(email, token);
-        }
+        },
+
+        async verifyAuthToken(token: string) {
+            return authApi.verifyAuthToken(token);
+        },
+
+        async validateAuthToken(token: string) {
+            return authApi.validateAuthToken(token);
+        },
     }
 });
