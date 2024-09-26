@@ -9,6 +9,9 @@ export const useContentStore = defineStore({
     actions: {
         async getTotalKnowledgeCount() {
             return contentApi.getTotalKnowledgeCount();
+        },
+        async getDailyKnowledge() {
+            return contentApi.getDailyKnowledge();
         }
     }
 });

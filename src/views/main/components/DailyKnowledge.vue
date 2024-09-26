@@ -1,5 +1,26 @@
 <script setup lang="ts">
-import {SquarePlusIcon} from "vue-tabler-icons";
+import { SquarePlusIcon } from "vue-tabler-icons";
+import { useContentStore } from "@/stores/content";
+import { onMounted, ref } from "vue";
+
+const { getDailyKnowledge } = useContentStore();
+const dailyKnowledgeTitle = ref("");
+
+async function requestGetDailyKnowledge() {
+  getDailyKnowledge()
+      .then((response) => {
+        let data = response.data;
+        dailyKnowledgeTitle.value = data.getDailyKnowledge.title;
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+}
+
+onMounted(() => {
+  requestGetDailyKnowledge();
+});
+
 </script>
 
 <template>
@@ -11,7 +32,7 @@ import {SquarePlusIcon} from "vue-tabler-icons";
         </v-btn>
       </div>
       <h2 class="text-h1 font-weight-medium">
-        금일 <a href="#"><CircleArrowUpRightIcon stroke-width="1.5" width="28" class="text-white" /> </a>
+        {{ dailyKnowledgeTitle }} <a href="#"><CircleArrowUpRightIcon stroke-width="1.5" width="28" class="text-white" /> </a>
       </h2>
       <span class="text-subtitle-1 text-medium-emphasis text-white">오늘의 상식</span>
     </v-card-text>
