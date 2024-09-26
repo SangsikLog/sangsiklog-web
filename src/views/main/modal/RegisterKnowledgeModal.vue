@@ -1,8 +1,15 @@
 <script setup lang="ts">
-import {defineProps, defineEmits, ref, onMounted} from 'vue';
-import {useContentStore} from "@/stores/content";
+import { ref, onMounted } from 'vue';
+import { useContentStore } from "@/stores/content";
+import {useUserStore} from "@/stores/user";
 
-const { getCategoryList } = useContentStore();
+const { getCategoryList, registerKnowledge } = useContentStore();
+const userStore = useUserStore();
+
+const Regform = ref();
+const title = ref('');
+const description = ref('');
+const selectedCategory = ref(null);
 
 const props = defineProps({
   showRegisterKnowledgeModal: Boolean
@@ -14,10 +21,23 @@ const closeModal = () => {
   emit("update:showRegisterKnowledgeModal", false);
 };
 
-const register = () => {
-  console.log("Registering knowledge...");
-  closeModal();
+const register = async () => {
+  const validateResult = await Regform.value.validate();
+  if (validateResult.valid) {
+    await requestRegisterKnowledge(userStore.userInfo.id, title.value, description.value, selectedCategory.value);
+  }
 };
+
+async function requestRegisterKnowledge(userId, title, description, categoryId) {
+  registerKnowledge(userId, title, description, categoryId)
+      .then(() => {
+        closeModal();
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+}
 
 const titleRules = ref([
   (v: string) => !!v || '제목을 입력해주세요.'
@@ -47,7 +67,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <v-dialog v-model="props.showRegisterKnowledgeModal" max-width="500" @click:outside="closeModal">
+  <v-dialog :model-value="props.showRegisterKnowledgeModal" max-width="500" @click:outside="closeModal">
     <v-card rounded="lg">
       <v-card-title class="d-flex justify-space-between align-center bg-primary">
         <div class="text-h2 ps-2">
@@ -57,32 +77,37 @@ onMounted(() => {
 
       <v-divider class="mb-4"></v-divider>
 
-      <v-card-text>
-        <v-text-field
-            :rules="titleRules"
-            label="제목"
-            variant="outlined"
-        ></v-text-field>
+      <v-form ref="Regform">
+        <v-card-text>
+          <v-text-field
+              v-model="title"
+              :rules="titleRules"
+              label="제목"
+              variant="outlined"
+          ></v-text-field>
 
-        <v-textarea
-            :rules="descriptionRules"
-            label="설명"
-            :counter="300"
-            class="mb-2"
-            rows="2"
-            variant="outlined"
-            persistent-counter
-        ></v-textarea>
+          <v-textarea
+              v-model="description"
+              :rules="descriptionRules"
+              label="설명"
+              :counter="300"
+              class="mb-2"
+              rows="2"
+              variant="outlined"
+              persistent-counter
+          ></v-textarea>
 
-        <v-select
-            :rules="categoryRules"
-            label="카테고리"
-            :items="categoryItems"
-            item-title="name"
-            item-value="id"
-            variant="outlined"
-        ></v-select>
-      </v-card-text>
+          <v-select
+              v-model="selectedCategory"
+              :rules="categoryRules"
+              label="카테고리"
+              :items="categoryItems"
+              item-title="name"
+              item-value="id"
+              variant="outlined"
+          ></v-select>
+        </v-card-text>
+      </v-form>
 
       <v-divider class="mt-2"></v-divider>
 

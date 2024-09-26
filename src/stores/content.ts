@@ -25,6 +25,9 @@ export const useContentStore = defineStore({
         },
         async getCategoryKnowledgeStatistic() {
             return contentApi.getCategoryKnowledgeStatistic();
+        },
+        async registerKnowledge(userId: Long, title: string, description: string, categoryId: Long) {
+            return contentApi.registerKnowledge(userId, title, description, categoryId);
         }
     }
 });
