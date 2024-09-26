@@ -1,61 +1,26 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-
-// import icons
+import { onMounted, ref } from 'vue';
 import { AwardFilledIcon } from 'vue-tabler-icons';
+import { useContentStore } from "@/stores/content";
 
-const revenues = ref([
-  {
-    name: 'Bajaj Finery',
-    price: 145,
-    profit: 10
-  },
-  {
-    name: 'TTML',
-    price: 142,
-    profit: 10
-  },
-  {
-    name: 'Reliance',
-    price: 100,
-    profit: 10
-  },
-  {
-    name: 'TTML',
-    price: 98,
-    profit: 10
-  },
-  {
-    name: 'Stolon',
-    price: 88,
-    profit: 10
-  },
-  {
-    name: 'Stolon',
-    price: 88,
-    profit: 10
-  },
-  {
-    name: 'Stolon',
-    price: 88,
-    profit: 10
-  },
-  {
-    name: 'Stolon',
-    price: 88,
-    profit: 10
-  },
-  {
-    name: 'Stolon',
-    price: 88,
-    profit: 10
-  },
-  {
-    name: 'Stolon',
-    price: 88,
-    profit: 10
-  }
-]);
+const popularKnowledgeList = ref([]);
+
+const { getPopularKnowledgeList } = useContentStore();
+
+async function requestGetPopularKnowledgeList() {
+  getPopularKnowledgeList()
+      .then((response) => {
+        let data = response.data;
+        popularKnowledgeList.value = data.getPopularKnowledgeList.knowledgeList
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+}
+
+onMounted(() => {
+  requestGetPopularKnowledgeList();
+});
 </script>
 
 <template>
@@ -71,18 +36,18 @@ const revenues = ref([
         <div class="mt-4">
           <perfect-scrollbar v-bind:style="{ height: '270px' }">
             <v-list lines="two" class="py-0">
-              <v-list-item v-for="(revenue, i) in revenues" :key="i" :value="revenue" color="secondary" rounded="sm">
+              <v-list-item v-for="(popularKnowledge, i) in popularKnowledgeList" :key="i" :value="popularKnowledge" color="secondary" rounded="sm">
                 <template v-slot:append>
                   <AwardFilledIcon class="text-gold" style="vertical-align: sub"/>
                 </template>
                 <div class="d-inline-flex align-center justify-space-between w-100">
                   <div>
                     <h6 class="text-subtitle-1 text-medium-emphasis font-weight-bold">
-                      {{ revenue.name }}
+                      {{ popularKnowledge.title }}
                     </h6>
                   </div>
 
-                  <div class="ml-auto text-subtitle-1 text-medium-emphasis font-weight-bold">{{ revenue.price }}</div>
+                  <div class="ml-auto text-subtitle-1 text-medium-emphasis font-weight-bold">{{ popularKnowledge.likeCount }}</div>
                 </div>
               </v-list-item>
             </v-list>

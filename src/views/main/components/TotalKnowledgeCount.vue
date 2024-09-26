@@ -1,5 +1,25 @@
 <script setup lang="ts">
+import { onMounted, ref } from 'vue';
 import { ReportIcon, ActivityIcon } from "vue-tabler-icons";
+import { useContentStore } from "@/stores/content";
+
+const { getTotalKnowledgeCount } = useContentStore();
+const totalKnowledgeCount = ref(0);
+
+async function requestGetTotalKnowledgeCount() {
+  getTotalKnowledgeCount()
+      .then((response) => {
+        let data = response.data;
+        totalKnowledgeCount.value = data.getKnowledgeCount.count;
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+}
+
+onMounted(() => {
+  requestGetTotalKnowledgeCount();
+});
 </script>
 
 <template>
@@ -11,7 +31,7 @@ import { ReportIcon, ActivityIcon } from "vue-tabler-icons";
         </v-btn>
       </div>
       <h2 class="text-h1 font-weight-medium">
-        123 개 <ActivityIcon stroke-width="1.5" width="28" class="text-white" />
+        {{ totalKnowledgeCount }} 개 <ActivityIcon stroke-width="1.5" width="28" class="text-white" />
       </h2>
       <span class="text-subtitle-1 text-medium-emphasis text-white">총 상식 수</span>
     </v-card-text>

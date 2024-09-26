@@ -10,16 +10,20 @@ export const gqlFetchWrapper = {
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 function query() {
-  return async (query: any, variables?: object) => {
+  return async (query: any, variables?: object, authorization?: boolean = false) => {
     try {
+      const context: any = {
+        headers: {}
+      };
+
+      if (authorization) {
+        context.headers.Authorization = authHeader();
+      }
+
       return await apolloClient.query({
         query: query,
         variables: variables,
-        context: {
-          headers: {
-            Authorization: authHeader()
-          }
-        }
+        context: context
       });
     } catch (error) {
       if (error instanceof ApolloError) {
@@ -34,16 +38,20 @@ function query() {
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 function mutation() {
-  return async (mutation: any, variables?: object) => {
+  return async (mutation: any, variables?: object, authorization?: boolean = false) => {
     try {
+      const context: any = {
+        headers: {}
+      };
+
+      if (authorization) {
+        context.headers.Authorization = authHeader();
+      }
+
       return await apolloClient.mutate({
         mutation: mutation,
         variables: variables,
-        context: {
-          headers: {
-            Authorization: authHeader()
-          }
-        }
+        context: context
       });
     } catch (error) {
       if (error instanceof ApolloError) {
