@@ -15,6 +15,9 @@ export const useContentStore = defineStore({
         },
         async getPopularKnowledgeList() {
             return contentApi.getPopularKnowledgeList();
+        },
+        async getCategoryList() {
+            return contentApi.getCategoryList();
         }
     }
 });

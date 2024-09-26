@@ -41,8 +41,20 @@ const GET_POPULAR_KNOWLEDGE_LIST_QUERY = gql`
     }
 `;
 
+const GET_CATEGORY_LIST_QUERY = gql`
+    query GetCategoryList {
+        getCategoryList {
+            categoryList {
+                id
+                name
+            }
+        }
+    }
+`;
+
 export {
     GET_TOTAL_KNOWLEDGE_COUNT_QUERY,
     GET_DAILY_KNOWLEDGE_QUERY,
-    GET_POPULAR_KNOWLEDGE_LIST_QUERY
+    GET_POPULAR_KNOWLEDGE_LIST_QUERY,
+    GET_CATEGORY_LIST_QUERY
 }

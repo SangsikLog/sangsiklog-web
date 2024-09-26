@@ -1,73 +1,41 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import {ref, computed, onMounted} from 'vue';
 import { AwardFilledIcon } from "vue-tabler-icons";
+import {useContentStore} from "@/stores/content";
 
-const revenues = ref([
-  {
-    name: 'Bajaj Finery',
-    price: 145,
-    profit: 10
-  },
-  {
-    name: 'TTML',
-    price: 142,
-    profit: 10
-  },
-  {
-    name: 'Reliance',
-    price: 100,
-    profit: 10
-  },
-  {
-    name: 'TTML',
-    price: 98,
-    profit: 10
-  },
-  {
-    name: 'Stolon',
-    price: 88,
-    profit: 10
-  },
-  {
-    name: 'Stolon',
-    price: 88,
-    profit: 10
-  },
-  {
-    name: 'Stolon',
-    price: 88,
-    profit: 10
-  },
-  {
-    name: 'Stolon',
-    price: 88,
-    profit: 10
-  },
-  {
-    name: 'Stolon',
-    price: 88,
-    profit: 10
-  },
-  {
-    name: 'Stolon',
-    price: 88,
-    profit: 10
-  }
-]);
+const { getPopularKnowledgeList, getCategoryList } = useContentStore();
+let isInitialized = false;
 
-const select = ref({ state: '역사', abbr: 'HISTORY' });
-const items = [
-  { state: '역사', abbr: 'HISTORY' },
-  { state: '지리', abbr: 'GEOGRAPHY' },
-  { state: '과학', abbr: 'SCIENCE' },
-  { state: '기술', abbr: 'TECHNOLOGY' },
-  { state: '문화', abbr: 'CULTURE' },
-  { state: '사회', abbr: 'SOCIETY' },
-  { state: '스포츠', abbr: 'SPORTS' },
-  { state: '건강', abbr: 'HEALTH' },
-  { state: '엔터테인먼트', abbr: 'ENTERTAINMENT' },
-  { state: '기타', abbr: 'ETC' }
-];
+const popularKnowledgeList = ref([]);
+async function requestGetPopularKnowledgeList() {
+  getPopularKnowledgeList()
+      .then((response) => {
+        let data = response.data;
+        popularKnowledgeList.value = data.getPopularKnowledgeList.knowledgeList;
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+}
+
+const selectedCategory = ref();
+const categoryItems =  ref([]);
+async function requestGetCategoryList() {
+  getCategoryList()
+      .then((response) => {
+        let data = response.data;
+        categoryItems.value = data.getCategoryList.categoryList;
+
+        if (!isInitialized) {
+          selectedCategory.value = categoryItems.value[0];
+          isInitialized = true;
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+}
+
 
 // chart 1
 const chartOptions1 = computed(() => {
@@ -144,6 +112,13 @@ const lineChart1 = {
     }
   ]
 };
+
+onMounted(() => {
+  requestGetPopularKnowledgeList();
+  requestGetCategoryList().then(() => {
+    selectedCategory.value = categoryItems.value[0];
+  });
+});
 </script>
 
 <template>
@@ -159,10 +134,10 @@ const lineChart1 = {
               color="primary"
               variant="outlined"
               hide-details
-              v-model="select"
-              :items="items"
-              item-title="state"
-              item-value="abbr"
+              v-model="selectedCategory"
+              :items="categoryItems"
+              item-title="name"
+              item-value="id"
               label="Select"
               persistent-hint
               return-object
@@ -175,18 +150,18 @@ const lineChart1 = {
           <apexchart type="bar" height="480" :options="chartOptions1" :series="lineChart1.series"> </apexchart>
           <perfect-scrollbar v-bind:style="{ height: '270px' }">
             <v-list lines="two" class="py-0">
-              <v-list-item v-for="(revenue, i) in revenues" :key="i" :value="revenue" color="secondary" rounded="sm">
+              <v-list-item v-for="(popularKnowledge, i) in popularKnowledgeList" :key="i" :value="popularKnowledge" color="secondary" rounded="sm">
                 <template v-slot:append>
                   <AwardFilledIcon class="text-gold" style="vertical-align: sub"/>
                 </template>
                 <div class="d-inline-flex align-center justify-space-between w-100">
                   <div>
                     <h6 class="text-subtitle-1 text-medium-emphasis font-weight-bold">
-                      {{ revenue.name }}
+                      {{ popularKnowledge.title }}
                     </h6>
                   </div>
 
-                  <div class="ml-auto text-subtitle-1 text-medium-emphasis font-weight-bold">{{ revenue.price }}</div>
+                  <div class="ml-auto text-subtitle-1 text-medium-emphasis font-weight-bold">{{ popularKnowledge.likeCount }}</div>
                 </div>
               </v-list-item>
             </v-list>
