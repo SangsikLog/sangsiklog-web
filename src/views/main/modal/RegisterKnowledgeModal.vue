@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, defineEmits, ref, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useContentStore } from "@/stores/content";
 import {useUserStore} from "@/stores/user";
 
@@ -67,7 +67,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <v-dialog v-model="props.showRegisterKnowledgeModal" max-width="500" @click:outside="closeModal">
+  <v-dialog :model-value="props.showRegisterKnowledgeModal" max-width="500" @click:outside="closeModal">
     <v-card rounded="lg">
       <v-card-title class="d-flex justify-space-between align-center bg-primary">
         <div class="text-h2 ps-2">

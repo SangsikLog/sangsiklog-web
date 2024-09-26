@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { defineProps, defineEmits } from "vue";
-
 const props = defineProps({
   showKnowledgeDetailModal: Boolean,
   title: String,
@@ -15,7 +13,7 @@ const closeModal = () => {
 </script>
 
 <template>
-  <v-dialog v-model="props.showKnowledgeDetailModal" max-width="500" @click:outside="closeModal">
+  <v-dialog :model-value="props.showKnowledgeDetailModal" max-width="500" @click:outside="closeModal">
     <v-card rounded="lg">
       <v-card-title class="d-flex justify-space-between align-center">
         <div class="text-h2 text-medium-emphasis ps-2">

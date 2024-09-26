@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { defineProps, defineEmits } from "vue";
 import {router} from "@/router";
 
 const props = defineProps({
@@ -15,7 +14,7 @@ const closeModal = () => {
 </script>
 
 <template>
-  <v-dialog v-model="props.showLoginModal" max-width="500" @click:outside="closeModal">
+  <v-dialog :model-value="props.showLoginModal" max-width="500" @click:outside="closeModal">
     <v-card rounded="lg">
       <v-card-title class="d-flex justify-space-between align-center">
         <div class="text-h2 text-medium-emphasis ps-2">
