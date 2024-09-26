@@ -25,8 +25,8 @@ const GET_DAILY_KNOWLEDGE_QUERY = gql`
 `;
 
 const GET_POPULAR_KNOWLEDGE_LIST_QUERY = gql`
-    query GetPopularKnowledgeList {
-        getPopularKnowledgeList {
+    query GetPopularKnowledgeList($categoryId: Long) {
+        getPopularKnowledgeList(categoryId: $categoryId) {
             knowledgeList {
                 id
                 title

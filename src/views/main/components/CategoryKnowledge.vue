@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import {ref, computed, onMounted} from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { AwardFilledIcon } from "vue-tabler-icons";
-import {useContentStore} from "@/stores/content";
+import { useContentStore } from "@/stores/content";
 
-const { getPopularKnowledgeList, getCategoryList } = useContentStore();
+const { getPopularKnowledgeListInCategory, getCategoryList } = useContentStore();
 let isInitialized = false;
 
 const popularKnowledgeList = ref([]);
-async function requestGetPopularKnowledgeList() {
-  getPopularKnowledgeList()
+async function requestGetPopularKnowledgeList(categoryId) {
+  getPopularKnowledgeListInCategory(categoryId)
       .then((response) => {
         let data = response.data;
         popularKnowledgeList.value = data.getPopularKnowledgeList.knowledgeList;
@@ -28,6 +28,7 @@ async function requestGetCategoryList() {
 
         if (!isInitialized) {
           selectedCategory.value = categoryItems.value[0];
+
           isInitialized = true;
         }
       })
@@ -113,8 +114,13 @@ const lineChart1 = {
   ]
 };
 
+watch(selectedCategory, (newCategory) => {
+  if (newCategory) {
+    requestGetPopularKnowledgeList(newCategory.id);
+  }
+});
+
 onMounted(() => {
-  requestGetPopularKnowledgeList();
   requestGetCategoryList().then(() => {
     selectedCategory.value = categoryItems.value[0];
   });
@@ -138,7 +144,7 @@ onMounted(() => {
               :items="categoryItems"
               item-title="name"
               item-value="id"
-              label="Select"
+              label="카테고리"
               persistent-hint
               return-object
               single-line

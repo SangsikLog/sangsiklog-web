@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { contentApi } from "@/api/ContentApi";
+import type Long from "long";
 
 export const useContentStore = defineStore({
     id: 'content',
@@ -18,6 +19,9 @@ export const useContentStore = defineStore({
         },
         async getCategoryList() {
             return contentApi.getCategoryList();
+        },
+        async getPopularKnowledgeListInCategory(categoryId: Long) {
+            return contentApi.getPopularKnowledgeListInCategory(categoryId);
         }
     }
 });
