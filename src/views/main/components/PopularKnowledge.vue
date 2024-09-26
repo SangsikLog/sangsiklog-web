@@ -3,8 +3,9 @@ import { onMounted, ref } from 'vue';
 import { AwardFilledIcon } from 'vue-tabler-icons';
 import { useContentStore } from "@/stores/content";
 import KnowledgeDetailModal from "@/views/main/modal/KnowledgeDetailModal.vue";
+import type {PopularKnowledge} from "@/interfaces/Content";
 
-const popularKnowledgeList = ref([]);
+const popularKnowledgeList = ref<PopularKnowledge[]>([]);
 const showKnowledgeDetailModal = ref(false);
 const selectedKnowledgeTitle = ref("");
 const selectedKnowledgeDescription = ref("");
@@ -22,7 +23,7 @@ async function requestGetPopularKnowledgeList() {
       })
 }
 
-const openKnowledgeDetailModal = (popularKnowledge) => {
+const openKnowledgeDetailModal = (popularKnowledge: PopularKnowledge) => {
   selectedKnowledgeTitle.value = popularKnowledge.title;
   selectedKnowledgeDescription.value = popularKnowledge.description;
   showKnowledgeDetailModal.value = true;

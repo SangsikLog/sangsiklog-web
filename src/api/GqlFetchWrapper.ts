@@ -10,7 +10,7 @@ export const gqlFetchWrapper = {
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 function query() {
-  return async (query: any, variables?: object, authorization?: boolean = false) => {
+  return async (query: any, variables?: object, authorization: boolean = false) => {
     try {
       const context: any = {
         headers: {}
@@ -38,7 +38,7 @@ function query() {
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 function mutation() {
-  return async (mutation: any, variables?: object, authorization?: boolean = false) => {
+  return async (mutation: any, variables?: object, authorization: boolean = false) => {
     try {
       const context: any = {
         headers: {}

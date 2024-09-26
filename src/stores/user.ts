@@ -1,11 +1,12 @@
 import { defineStore } from "pinia";
 import { userApi } from "@/api/UserApi";
 import type Long from "long";
+import type {UserInfo} from "@/interfaces/User";
 
 export const useUserStore = defineStore({
     id: 'user',
     state: () => ({
-        userInfo: null,
+        userInfo: null as UserInfo | null,
         returnUrl: '/'
     }),
     actions: {
@@ -15,7 +16,7 @@ export const useUserStore = defineStore({
         async getUserInfo(userId: Long) {
             return userApi.getUserInfo(userId);
         },
-        initUserInfo(userInfo) {
+        initUserInfo(userInfo: UserInfo | null) {
             this.userInfo = userInfo
         },
     }

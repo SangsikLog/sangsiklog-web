@@ -2,6 +2,8 @@
 import { ref, onMounted } from 'vue';
 import { useContentStore } from "@/stores/content";
 import {useUserStore} from "@/stores/user";
+import type Long from "long";
+import type { UserInfo } from "@/interfaces/User";
 
 const { getCategoryList, registerKnowledge } = useContentStore();
 const userStore = useUserStore();
@@ -9,7 +11,7 @@ const userStore = useUserStore();
 const Regform = ref();
 const title = ref('');
 const description = ref('');
-const selectedCategory = ref(null);
+const selectedCategory = ref();
 
 const props = defineProps({
   showRegisterKnowledgeModal: Boolean
@@ -24,11 +26,16 @@ const closeModal = () => {
 const register = async () => {
   const validateResult = await Regform.value.validate();
   if (validateResult.valid) {
-    await requestRegisterKnowledge(userStore.userInfo.id, title.value, description.value, selectedCategory.value);
+    if (userStore.userInfo) {
+      const userInfo = userStore.userInfo as UserInfo;
+      await requestRegisterKnowledge(userInfo.id, title.value, description.value, selectedCategory.value);
+    } else {
+      alert("로그인이 필요합니다.");
+    }
   }
 };
 
-async function requestRegisterKnowledge(userId, title, description, categoryId) {
+async function requestRegisterKnowledge(userId: Long, title: string, description: string, categoryId: Long) {
   registerKnowledge(userId, title, description, categoryId)
       .then(() => {
         closeModal();

@@ -3,12 +3,14 @@ import { ref, computed, onMounted, watch } from 'vue';
 import { AwardFilledIcon } from "vue-tabler-icons";
 import { useContentStore } from "@/stores/content";
 import KnowledgeDetailModal from "@/views/main/modal/KnowledgeDetailModal.vue";
+import type Long from "long";
+import type { Category, CategoryKnowledgeStatistic, PopularKnowledge } from "@/interfaces/Content";
 
 const { getPopularKnowledgeListInCategory, getCategoryList, getCategoryKnowledgeStatistic } = useContentStore();
 let isInitialized = false;
 
-const popularKnowledgeList = ref([]);
-async function requestGetPopularKnowledgeList(categoryId) {
+const popularKnowledgeList = ref<PopularKnowledge[]>([]);
+async function requestGetPopularKnowledgeList(categoryId: Long) {
   getPopularKnowledgeListInCategory(categoryId)
       .then((response) => {
         let data = response.data;
@@ -20,12 +22,12 @@ async function requestGetPopularKnowledgeList(categoryId) {
 }
 
 const selectedCategory = ref();
-const categoryItems =  ref([]);
+const categoryItems =  ref<Category[]>([]);
 async function requestGetCategoryList() {
   getCategoryList()
       .then((response) => {
         let data = response.data;
-        categoryItems.value = data.getCategoryList.categoryList;
+        categoryItems.value = data.getCategoryList.categoryList as Category[];
 
         if (!isInitialized) {
           selectedCategory.value = categoryItems.value[0];
@@ -40,7 +42,7 @@ async function requestGetCategoryList() {
       })
 }
 
-const knowledgeCounts = ref([]);
+const knowledgeCounts = ref<Long[]>([]);
 
 async function requestGetCategoryKnowledgeStatistic() {
   getCategoryKnowledgeStatistic()
@@ -48,10 +50,10 @@ async function requestGetCategoryKnowledgeStatistic() {
         let data = response.data;
         let statistic = data.getCategoryKnowledgeStatistic.statistic;
 
-        const categoryMap = new Map(categoryItems.value.map(item => [item.id, item.name]));
+        const categoryMap = new Map<Long, string>(categoryItems.value.map(item => [item.id, item.name]));
         knowledgeCounts.value = new Array(categoryItems.value.length).fill(0);
 
-        statistic.forEach(item => {
+        statistic.forEach((item: CategoryKnowledgeStatistic) => {
           if (categoryMap.has(item.categoryId)) {
             const index = categoryItems.value.findIndex(cat => cat.id === item.categoryId);
             knowledgeCounts.value[index] = item.knowledgeCount;
@@ -67,7 +69,7 @@ const showKnowledgeDetailModal = ref(false);
 const selectedKnowledgeTitle = ref("");
 const selectedKnowledgeDescription = ref("");
 
-const openKnowledgeDetailModal = (popularKnowledge) => {
+const openKnowledgeDetailModal = (popularKnowledge: PopularKnowledge) => {
   selectedKnowledgeTitle.value = popularKnowledge.title;
   selectedKnowledgeDescription.value = popularKnowledge.description;
   showKnowledgeDetailModal.value = true;

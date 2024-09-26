@@ -10,6 +10,8 @@ import ProfileDD from './ProfileDD.vue';
 import Searchbar from './SearchBarPanel.vue';
 import { useAuthStore } from "@/stores/auth";
 import { useUserStore } from "@/stores/user";
+import type Long from "long";
+import type {UserInfo} from "@/interfaces/User";
 
 const customizer = useCustomizerStore();
 const showSearch = ref(false);
@@ -49,8 +51,8 @@ async function getUserId() {
       })
 }
 
-async function requestGetUserInfo(userId) {
-  const setUserInfo = (userInfo) => {
+async function requestGetUserInfo(userId: Long) {
+  const setUserInfo = (userInfo: UserInfo) => {
     isLogin.value = true;
     nickName.value = userInfo.nickname;
     email.value = userInfo.email;
@@ -64,7 +66,9 @@ async function requestGetUserInfo(userId) {
   getUserInfo(userId)
       .then((response) => {
         initUserInfo(response.data.getUser);
-        setUserInfo(userStore.userInfo);
+        if (userStore.userInfo) {
+          setUserInfo(userStore.userInfo);
+        }
       })
       .catch((error) => {
         console.log(error);
