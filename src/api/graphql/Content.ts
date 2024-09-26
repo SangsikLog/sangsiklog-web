@@ -52,9 +52,21 @@ const GET_CATEGORY_LIST_QUERY = gql`
     }
 `;
 
+const GET_CATEGORY_KNOWLEDGE_STATISTIC_QUERY = gql`
+    query getCategoryKnowledgeStatistic {
+        getCategoryKnowledgeStatistic {
+            statistic {
+                categoryId
+                knowledgeCount
+            }
+        }
+    }
+`;
+
 export {
     GET_TOTAL_KNOWLEDGE_COUNT_QUERY,
     GET_DAILY_KNOWLEDGE_QUERY,
     GET_POPULAR_KNOWLEDGE_LIST_QUERY,
-    GET_CATEGORY_LIST_QUERY
+    GET_CATEGORY_LIST_QUERY,
+    GET_CATEGORY_KNOWLEDGE_STATISTIC_QUERY
 }

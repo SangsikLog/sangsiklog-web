@@ -22,6 +22,9 @@ export const useContentStore = defineStore({
         },
         async getPopularKnowledgeListInCategory(categoryId: Long) {
             return contentApi.getPopularKnowledgeListInCategory(categoryId);
+        },
+        async getCategoryKnowledgeStatistic() {
+            return contentApi.getCategoryKnowledgeStatistic();
         }
     }
 });

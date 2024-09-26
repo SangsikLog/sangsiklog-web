@@ -3,7 +3,7 @@ import { ref, computed, onMounted, watch } from 'vue';
 import { AwardFilledIcon } from "vue-tabler-icons";
 import { useContentStore } from "@/stores/content";
 
-const { getPopularKnowledgeListInCategory, getCategoryList } = useContentStore();
+const { getPopularKnowledgeListInCategory, getCategoryList, getCategoryKnowledgeStatistic } = useContentStore();
 let isInitialized = false;
 
 const popularKnowledgeList = ref([]);
@@ -29,6 +29,8 @@ async function requestGetCategoryList() {
         if (!isInitialized) {
           selectedCategory.value = categoryItems.value[0];
 
+          requestGetCategoryKnowledgeStatistic();
+
           isInitialized = true;
         }
       })
@@ -37,9 +39,31 @@ async function requestGetCategoryList() {
       })
 }
 
+const knowledgeCounts = ref([]);
 
-// chart 1
-const chartOptions1 = computed(() => {
+async function requestGetCategoryKnowledgeStatistic() {
+  getCategoryKnowledgeStatistic()
+      .then((response) => {
+        let data = response.data;
+        let statistic = data.getCategoryKnowledgeStatistic.statistic;
+
+        const categoryMap = new Map(categoryItems.value.map(item => [item.id, item.name]));
+        knowledgeCounts.value = new Array(categoryItems.value.length).fill(0);
+
+        statistic.forEach(item => {
+          if (categoryMap.has(item.categoryId)) {
+            const index = categoryItems.value.findIndex(cat => cat.id === item.categoryId);
+            knowledgeCounts.value[index] = item.knowledgeCount;
+          }
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+}
+
+
+const chartOptions = computed(() => {
   return {
     chart: {
       type: 'bar',
@@ -69,7 +93,7 @@ const chartOptions1 = computed(() => {
     },
     xaxis: {
       type: 'category',
-      categories: ['역사', '지리', '과학', '기술', '문화', '사회', '스포츠', '건강', '엔터테인먼트', '기타']
+      categories: categoryItems.value.map(item => item.name),
     },
     legend: {
       show: true,
@@ -104,15 +128,16 @@ const chartOptions1 = computed(() => {
   };
 });
 
-// chart 1
-const lineChart1 = {
-  series: [
-    {
-      name: '개수',
-      data: [35, 125, 35, 35, 35, 80, 35, 20, 35, 45]
-    }
-  ]
-};
+const lineChart = computed(() => {
+  return {
+    series: [
+      {
+        name: '개수',
+        data: knowledgeCounts.value
+      }
+    ]
+  }
+});
 
 watch(selectedCategory, (newCategory) => {
   if (newCategory) {
@@ -121,9 +146,7 @@ watch(selectedCategory, (newCategory) => {
 });
 
 onMounted(() => {
-  requestGetCategoryList().then(() => {
-    selectedCategory.value = categoryItems.value[0];
-  });
+  requestGetCategoryList();
 });
 </script>
 
@@ -153,7 +176,7 @@ onMounted(() => {
           </v-col>
         </v-row>
         <div class="mt-4">
-          <apexchart type="bar" height="480" :options="chartOptions1" :series="lineChart1.series"> </apexchart>
+          <apexchart type="bar" height="480" :options="chartOptions" :series="lineChart.series"> </apexchart>
           <perfect-scrollbar v-bind:style="{ height: '270px' }">
             <v-list lines="two" class="py-0">
               <v-list-item v-for="(popularKnowledge, i) in popularKnowledgeList" :key="i" :value="popularKnowledge" color="secondary" rounded="sm">
