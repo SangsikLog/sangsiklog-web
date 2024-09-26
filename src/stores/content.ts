@@ -12,6 +12,9 @@ export const useContentStore = defineStore({
         },
         async getDailyKnowledge() {
             return contentApi.getDailyKnowledge();
+        },
+        async getPopularKnowledgeList() {
+            return contentApi.getPopularKnowledgeList();
         }
     }
 });
