@@ -7,6 +7,11 @@ const props = defineProps({
 
 const emit = defineEmits(["update:showKnowledgeDetailModal"]);
 
+const formatResponseText = (text: string) => {
+  return text.split('\n').join('<br/>'); // 줄바꿈 문자를 <br>로 변환
+};
+
+
 const closeModal = () => {
   emit("update:showKnowledgeDetailModal", false);
 };
@@ -24,8 +29,7 @@ const closeModal = () => {
       <v-divider class="mb-4"></v-divider>
 
       <v-card-text>
-        <div class="text-high-emphasis mb-2">
-          {{ props.description }}
+        <div class="text-high-emphasis mb-2" v-html="formatResponseText(props.description)">
         </div>
       </v-card-text>
 

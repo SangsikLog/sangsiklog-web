@@ -3,7 +3,6 @@ kind: Ingress
 metadata:
   name: sangsiklo-web-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
   ingressClassName: nginx
@@ -12,8 +11,51 @@ spec:
         - sangsiklog.store
       secretName: sangsiklog-web-cert
   rules:
-    - http:
+    - host: sangsiklog.store
+      http:
         paths:
+          - path: /api/auth/token
+            pathType: Prefix
+            backend:
+              service:
+                name: sangsiklog-gateway
+                port:
+                  number: 8080
+          - path: /api/auth/email
+            pathType: Prefix
+            backend:
+              service:
+                name: sangsiklog-gateway
+                port:
+                  number: 8080
+          - path: /api/email/verify-token
+            pathType: Prefix
+            backend:
+              service:
+                name: sangsiklog-gateway
+                port:
+                  number: 8080
+          - path: /api/auth/verify-token
+            pathType: Prefix
+            backend:
+              service:
+                name: sangsiklog-gateway
+                port:
+                  number: 8080
+          - path: /api/auth/validate
+            pathType: Prefix
+            backend:
+              service:
+                name: sangsiklog-gateway
+                port:
+                  number: 8080
+          - path: /api/graphql
+            pathType: Prefix
+            backend:
+              service:
+                name: sangsiklog-gateway
+                port:
+                  number: 8080
           - path: /
             pathType: Prefix
             backend:
