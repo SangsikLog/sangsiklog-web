@@ -5,6 +5,7 @@ import type Long from "long";
 export const useContentStore = defineStore({
     id: 'content',
     state: () => ({
+        searchQuery: '',
         returnUrl: '/'
     }),
     actions: {
@@ -31,6 +32,12 @@ export const useContentStore = defineStore({
         },
         async getKnowledgeList(page: number, size: number, sortColumn: string, direction: string) {
             return contentApi.getKnowledgeList(page, size, sortColumn, direction);
+        },
+        async searchKnowledge(query: string, page: number, size: number) {
+            return contentApi.searchKnowledge(query, page, size);
+        },
+        setSearchQuery(query: string) {
+            this.searchQuery = query;
         }
     }
 });

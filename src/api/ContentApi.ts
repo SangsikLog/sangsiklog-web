@@ -5,7 +5,8 @@ import {
     GET_CATEGORY_LIST_QUERY,
     GET_CATEGORY_KNOWLEDGE_STATISTIC_QUERY,
     REGISTER_KNOWLEDGE_MUTATION,
-    GET_KNOWLEDGE_LIST_QUERY
+    GET_KNOWLEDGE_LIST_QUERY,
+    SEARCH_KNOWLEDGE_QUERY
 } from "@/api/graphql/Content";
 import { gqlFetchWrapper } from "@/api/GqlFetchWrapper";
 import Long from "long";
@@ -21,6 +22,8 @@ const contentApi = {
         gqlFetchWrapper.mutation(REGISTER_KNOWLEDGE_MUTATION, {userId, title, description, categoryId}, true),
     getKnowledgeList: (page: number, size: number, sortColumn: string, direction: string) =>
         gqlFetchWrapper.query(GET_KNOWLEDGE_LIST_QUERY, {page, size, sortColumn, direction}),
+    searchKnowledge: (query: string, page: number, size: number) =>
+        gqlFetchWrapper.query(SEARCH_KNOWLEDGE_QUERY, {query, page, size}),
 };
 
 export {

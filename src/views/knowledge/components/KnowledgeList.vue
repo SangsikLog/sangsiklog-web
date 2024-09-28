@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed, onMounted, ref} from 'vue';
+import {computed, onMounted, ref, watch} from 'vue';
 import { AwardFilledIcon } from 'vue-tabler-icons';
 import { useContentStore } from "@/stores/content";
 import KnowledgeDetailModal from "@/views/main/modal/KnowledgeDetailModal.vue";
@@ -12,7 +12,9 @@ const showKnowledgeDetailModal = ref(false);
 const selectedKnowledgeTitle = ref("");
 const selectedKnowledgeDescription = ref("");
 
-const { getKnowledgeList } = useContentStore();
+const { getKnowledgeList, searchKnowledge } = useContentStore();
+
+const contentStore = useContentStore();
 
 const pageSize = 20;
 const currentPage = ref(1);
@@ -22,15 +24,31 @@ const totalPages = computed(() => {
 });
 
 const fetchData = () => {
-  requestGetPopularKnowledgeList(currentPage.value, pageSize)
+  if (contentStore.searchQuery != '') {
+    requestSearchKnowledge(currentPage.value, pageSize)
+  } else {
+    requestGetKnowledgeList(currentPage.value, pageSize)
+  }
 };
 
-async function requestGetPopularKnowledgeList(page: number, size: number) {
+async function requestGetKnowledgeList(page: number, size: number) {
   getKnowledgeList(page, size, "createdAt", "DESC")
       .then((response) => {
         let data = response.data;
         knowledgeList.value = data.getKnowledgeList.knowledgeList
         totalKnowledgeCount.value = data.getKnowledgeList.pagerInfo.totalCount
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+}
+
+async function requestSearchKnowledge(page: number, size: number) {
+  searchKnowledge(contentStore.searchQuery, page, size)
+      .then((response) => {
+        let data = response.data;
+        knowledgeList.value = data.searchKnowledge.knowledgeList
+        totalKnowledgeCount.value = data.searchKnowledge.pagerInfo.totalCount
       })
       .catch((error) => {
         console.log(error);
@@ -43,8 +61,18 @@ const openKnowledgeDetailModal = (knowledge: Knowledge) => {
   showKnowledgeDetailModal.value = true;
 };
 
+const query = computed(() => contentStore.searchQuery);
+
+watch(query, () => {
+  requestSearchKnowledge(1, pageSize)
+});
+
 onMounted(() => {
-  requestGetPopularKnowledgeList(1, pageSize)
+  if (contentStore.searchQuery !== '') {
+    requestSearchKnowledge(1, pageSize)
+  } else {
+    requestGetKnowledgeList(1, pageSize)
+  }
 });
 </script>
 
