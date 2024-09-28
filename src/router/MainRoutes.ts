@@ -9,6 +9,11 @@ const MainRoutes = {
       name: 'Main',
       path: '',
       component: () => import('@/views/main/MainPage.vue')
+    },
+    {
+      name: 'Knowledge',
+      path: 'knowledge',
+      component: () => import('@/views/main/MainPage.vue')
     }
   ]
 };
