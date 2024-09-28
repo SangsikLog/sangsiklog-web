@@ -84,7 +84,6 @@ const handleSearch = () => {
   router.push('/knowledge');
 };
 
-
 onMounted(() => {
   requestVerifyAuthToken();
 });
@@ -129,7 +128,7 @@ onMounted(() => {
     </v-btn>
 
     <v-sheet v-if="showSearch" class="search-sheet v-col-12">
-      <Searchbar :closesearch="searchbox" />
+      <Searchbar :closesearch="searchbox" @keyup.enter="handleSearch"/>
     </v-sheet>
 
     <!-- ---------------------------------------------- -->
