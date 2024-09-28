@@ -1,6 +1,6 @@
 # 상식로그 웹
 
-상식로그 플랫폼(https://sangsiklog.sotre) 의 프론트엔드 웹 애플리케이션입니다.\
+상식로그 플랫폼(https://sangsiklog.store) 의 프론트엔드 웹 애플리케이션입니다.\
 Vue.js와 TypeScript를 사용하여 개발되었습니다.
 
 ## 주요 기능
