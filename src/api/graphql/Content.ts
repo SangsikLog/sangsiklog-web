@@ -71,11 +71,50 @@ const REGISTER_KNOWLEDGE_MUTATION = gql`
     }
 `;
 
+const GET_KNOWLEDGE_LIST_QUERY = gql`
+    query GetKnowledgeList($page: Int!, $size: Int!, $sortColumn: String!, $direction: SortDirection!, $categoryId: Long) {
+        getKnowledgeList(page: $page, size: $size, sortColumn: $sortColumn, direction: $direction, categoryId: $categoryId) {
+            knowledgeList {
+                id
+                title
+                description
+                category {
+                    name
+                }
+                likeCount
+                createdAt
+            },
+            pagerInfo {
+                totalCount
+            }
+        }
+    }
+`;
+
+const SEARCH_KNOWLEDGE_QUERY = gql`
+    query SearchKnowledge($query: String!, $page: Int!, $size: Int!, $categoryId: Long) {
+        searchKnowledge(query: $query, categoryId: $categoryId, page: $page, size: $size) {
+            knowledgeList {
+                id
+                title
+                description
+                likeCount
+                createdAt
+            },
+            pagerInfo {
+                totalCount
+            }
+        }
+    }
+`;
+
 export {
     GET_TOTAL_KNOWLEDGE_COUNT_QUERY,
     GET_DAILY_KNOWLEDGE_QUERY,
     GET_POPULAR_KNOWLEDGE_LIST_QUERY,
     GET_CATEGORY_LIST_QUERY,
     GET_CATEGORY_KNOWLEDGE_STATISTIC_QUERY,
-    REGISTER_KNOWLEDGE_MUTATION
+    REGISTER_KNOWLEDGE_MUTATION,
+    GET_KNOWLEDGE_LIST_QUERY,
+    SEARCH_KNOWLEDGE_QUERY
 }

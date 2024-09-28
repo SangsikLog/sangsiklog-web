@@ -4,6 +4,7 @@ import { AwardFilledIcon } from 'vue-tabler-icons';
 import { useContentStore } from "@/stores/content";
 import KnowledgeDetailModal from "@/views/main/modal/KnowledgeDetailModal.vue";
 import type {PopularKnowledge} from "@/interfaces/Content";
+import {router} from "@/router";
 
 const popularKnowledgeList = ref<PopularKnowledge[]>([]);
 const showKnowledgeDetailModal = ref(false);
@@ -65,7 +66,7 @@ onMounted(() => {
           </perfect-scrollbar>
 
           <div class="text-center mt-3">
-            <v-btn color="primary" variant="text"
+            <v-btn color="primary" variant="text" @click="router.push('/knowledge')"
               >전체 상식 보러가기
               <template v-slot:append>
                 <ChevronRightIcon stroke-width="1.5" width="20" />

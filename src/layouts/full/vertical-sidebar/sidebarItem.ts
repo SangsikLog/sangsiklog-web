@@ -1,5 +1,5 @@
 import {
-  ArchiveIcon
+  ArchiveIcon, ClipboardIcon
 } from 'vue-tabler-icons';
 
 export interface menu {
@@ -24,6 +24,11 @@ const sidebarItem: menu[] = [
     title: '오늘의 상식',
     icon: ArchiveIcon,
     to: '/'
+  },
+  {
+    title: '상식 둘러보기',
+    icon: ClipboardIcon,
+    to: '/knowledge'
   }
 ];
 

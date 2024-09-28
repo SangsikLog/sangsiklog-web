@@ -1,5 +1,14 @@
 import type Long from "long";
 
+interface Knowledge {
+    id: Long;
+    title: string;
+    description: string;
+    category: Category;
+    likeCount: Long;
+    createdAt: string;
+}
+
 interface PopularKnowledge {
     id: Long;
     title: string;
@@ -20,6 +29,7 @@ interface CategoryKnowledgeStatistic {
 
 
 export type {
+    Knowledge,
     PopularKnowledge,
     Category,
     CategoryKnowledgeStatistic

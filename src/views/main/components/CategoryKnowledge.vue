@@ -5,6 +5,7 @@ import { useContentStore } from "@/stores/content";
 import KnowledgeDetailModal from "@/views/main/modal/KnowledgeDetailModal.vue";
 import type Long from "long";
 import type { Category, CategoryKnowledgeStatistic, PopularKnowledge } from "@/interfaces/Content";
+import {router} from "@/router";
 
 const { getPopularKnowledgeListInCategory, getCategoryList, getCategoryKnowledgeStatistic } = useContentStore();
 let isInitialized = false;
@@ -209,7 +210,7 @@ onMounted(() => {
           </perfect-scrollbar>
 
           <div class="text-center mt-3">
-            <v-btn color="primary" variant="text"
+            <v-btn color="primary" variant="text" @click="router.push('/knowledge')"
             >전체 상식 보러가기
               <template v-slot:append>
                 <ChevronRightIcon stroke-width="1.5" width="20" />

@@ -12,6 +12,8 @@ import { useAuthStore } from "@/stores/auth";
 import { useUserStore } from "@/stores/user";
 import type Long from "long";
 import type {UserInfo} from "@/interfaces/User";
+import {useContentStore} from "@/stores/content";
+import {router} from "@/router";
 
 const customizer = useCustomizerStore();
 const showSearch = ref(false);
@@ -24,6 +26,7 @@ const nickName = ref("");
 const email = ref("");
 
 const { authToken, verifyAuthToken, validateAuthToken } = useAuthStore();
+const { setSearchQuery } = useContentStore();
 const { getUserInfo, initUserInfo } = useUserStore();
 const userStore = useUserStore();
 
@@ -75,6 +78,12 @@ async function requestGetUserInfo(userId: Long) {
       })
 }
 
+const searchQuery = ref('');
+const handleSearch = () => {
+  setSearchQuery(searchQuery.value);
+  router.push('/knowledge');
+};
+
 onMounted(() => {
   requestVerifyAuthToken();
 });
@@ -119,14 +128,14 @@ onMounted(() => {
     </v-btn>
 
     <v-sheet v-if="showSearch" class="search-sheet v-col-12">
-      <Searchbar :closesearch="searchbox" />
+      <Searchbar :closesearch="searchbox" @keyup.enter="handleSearch"/>
     </v-sheet>
 
     <!-- ---------------------------------------------- -->
     <!-- Search part -->
     <!-- ---------------------------------------------- -->
     <v-sheet class="mx-3 v-col-3 v-col-xl-2 v-col-lg-4 d-none d-lg-block">
-      <Searchbar />
+      <Searchbar v-model="searchQuery" @keyup.enter="handleSearch"/>
     </v-sheet>
 
     <!---/Search part -->
